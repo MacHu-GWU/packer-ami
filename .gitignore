@@ -1,5 +1,9 @@
 # User Settings
 
+packer-var-file.json
+packer-final.json
+manifest.json
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
