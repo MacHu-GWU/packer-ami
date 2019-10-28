@@ -10,6 +10,8 @@ File structure of this project
 .. code-block:: bash
 
     /repo
+    /repo/cicd
+    /repo/cicd/debug
     /repo/ami
     /repo/ami/<base-os>
     /repo/ami/<base-os>/<ami-name>
