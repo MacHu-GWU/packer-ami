@@ -1,5 +1,26 @@
 #!/bin/bash
 
+# This script execute the ``packer build`` command, but allow developer to run it
+# easily in either local laptop or in AWS Code Build environment (or any other
+# CI/CD system like CircleCI)
+#
+# It does the following steps:
+#
+# 1. It removes all comments from packer template. In other word, you can put
+#     comments in your packer template for better maintainability.
+# 2. Then it uses ``01-provisioner-setup.sh`` script to build the image.
+# 3. Then it uses ``02-provisioner-test.sh`` script to validate the image.
+# 4. Then it built the AMI image and export the information of the artifacts
+#     it been created into ``manifest.json``.
+# 5. Finally it use ``03-packer-post-process.sh`` script to post process after
+#     the image successfully been created. For example, it decide whether if
+#     we want to keep the AMI or grant access to someone.
+#
+# Note:
+#
+# for local development, it use ``packer-var-file.json`` to store
+# sensitive AWS credential. It use IAM role in Code Build.
+
 set -e
 
 dir_here="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
