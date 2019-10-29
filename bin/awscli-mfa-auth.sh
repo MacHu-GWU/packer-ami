@@ -14,6 +14,12 @@
 #
 # By default it should use the temp MFA credential
 #
+# Requires:
+#
+# - aws cli
+# - python
+# - jq
+#
 # Reference:
 # - How do I use an MFA token to authenticate access to my AWS resources through the AWS CLI?: https://aws.amazon.com/premiumsupport/knowledge-center/authenticate-mfa-cli/
 
