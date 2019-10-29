@@ -1,5 +1,34 @@
-README
+Build Amazon Machine Image using Packer in AWS Code Build
 ==============================================================================
+
+
+
+Basic Tutorial
+------------------------------------------------------------------------------
+
+
+
+Advance Tutorial
+------------------------------------------------------------------------------
+
+.. contents::
+    :depth: 1
+    :local:
+
+
+Test/Debug your Packer Build on specific image locally
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+Test/Debug CI/CD pipeline locally
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+Add new AMI Image Build Process to the Pipeline
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 
 File structure of this project
