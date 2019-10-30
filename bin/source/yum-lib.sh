@@ -7,3 +7,9 @@ is_yum_installed() {
         return 1
     fi
 }
+
+if is_yum_installed "git"; then
+    echo "installed"
+else
+    echo "not installed"
+fi
