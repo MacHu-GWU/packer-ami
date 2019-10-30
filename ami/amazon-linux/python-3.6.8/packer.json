@@ -10,6 +10,7 @@
         "version": "",
         // stage of this image, prod / dev / test
         "stage": "",
+        "path_to_project_root": "",
         // the shell scripts that do the installation works
         "path_to_provisioner_setup_script": "",
         // the shell scripts that test and validate the installtion works
@@ -48,6 +49,22 @@
             "inline": [
                 "sleep 30"
             ]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "mkdir -p /tmp/repo"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "{{user `path_to_provisioner_setup_script`}}/bin",
+            "destination": "/tmp/repo"
+        },
+        {
+            "type": "file",
+            "source": "{{user `path_to_provisioner_setup_script`}}/ami",
+            "destination": "/tmp/repo"
         },
         // setup software
         {

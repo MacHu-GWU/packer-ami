@@ -75,6 +75,7 @@ packer build \
     -var ami_name="${ami_name}" \
     -var version="${version}" \
     -var stage="${stage}" \
+    -var path_to_project_root="${dir_project_root}" \
     -var path_to_provisioner_setup_script="${dir_here}/01-provisioner-setup.sh" \
     -var path_to_provisioner_test_script="${dir_here}/02-provisioner-test.sh" \
     -var path_to_manifest_file="${dir_here}/manifest.json" \
