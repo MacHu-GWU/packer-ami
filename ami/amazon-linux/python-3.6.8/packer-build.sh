@@ -45,17 +45,36 @@ packer validate \
 
 print_colored_line $color_green "INFO: Template validated successfully."
 
-
-# is in code build runtime
+# if in CodeBuild environment
 if [ -n "$CODEBUILD_BUILD_ID" ]; then
+    branch_name="$(git branch -a --contains "${CODEBUILD_SOURCE_VERSION}" | sed -n 2p )"
+    branch_name="$(python -c "print('$branch_name'.strip())")"
     var_file_arg=""
+# if in CircleCI environment
+elif [ -n "$CIRCLECI" ]; then
+    branch_name="$CIRCLE_BRANCH"
+    var_file_arg=""
+# if in local laptop
 else
+    branch_name="$(git branch | grep \* | cut -d ' ' -f2)"
     var_file_arg="-var-file ${dir_here}/packer-var-file.json"
 fi
+
+if [ "$branch_name" == "master" ]; then
+    stage="prod"
+elif [ "$branch_name" == "dev" ]; then
+    stage="$branch_name"
+elif [ "$branch_name" == "test" ]; then
+    stage="$branch_name"
+else
+    stage="temp"
+fi
+
 
 packer build \
     -var ami_name="${ami_name}" \
     -var version="${version}" \
+    -var stage="${stage}" \
     -var path_to_provisioner_setup_script="${dir_here}/01-provisioner-setup.sh" \
     -var path_to_provisioner_test_script="${dir_here}/02-provisioner-test.sh" \
     -var path_to_manifest_file="${dir_here}/manifest.json" \

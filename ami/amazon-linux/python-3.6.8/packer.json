@@ -1,5 +1,6 @@
 {
     "variables": {
+        "os_version": "amazon-linux",
         "aws_access_key": "",
         "aws_secret_key": "",
         "aws_region": "",
@@ -7,6 +8,8 @@
         "ami_name": "",
         // version of this image
         "version": "",
+        // stage of this image, prod / dev / test
+        "stage": "",
         // the shell scripts that do the installation works
         "path_to_provisioner_setup_script": "",
         // the shell scripts that test and validate the installtion works
@@ -25,7 +28,18 @@
             "source_ami": "ami-0b69ea66ff7391e80",
             "instance_type": "t2.micro",
             "ssh_username": "ec2-user",
-            "ami_name": "{{user `ami_name`}}-{{user `version`}}-{{timestamp}}"
+            // ami naming converntion, allow user to easily filter it
+            "ami_name": "{{user `ami_name`}}-{{user `version`}}-{{user `stage`}}-{{timestamp}}",
+            "tags": {
+                "AMIName": "{{user `ami_name`}}",
+                "AMIFullName": "{{user `ami_name`}}-{{user `version`}}-{{user `stage`}}-{{timestamp}}",
+                "AMIVersion": "{{user `version`}}",
+                "Stage": "{{user `stage`}}",
+                "OSVersion": "{{user `os_version`}}",
+                "BaseAMI": "{{.SourceAMI}}",
+                "BaseAMIName": "{{.SourceAMIName}}",
+                "CreateAt": "{{isotime}}"
+            }
         }
     ],
     "provisioners": [
@@ -35,21 +49,25 @@
                 "sleep 30"
             ]
         },
+        // setup software
         {
             "type": "shell",
             "script": "{{user `path_to_provisioner_setup_script`}}"
         },
+        // validate image
         {
             "type": "shell",
             "script": "{{user `path_to_provisioner_test_script`}}"
         }
     ],
     "post-processors": [
+        // export artifacts infor to manifest file
         {
             "type": "manifest",
             "output": "{{user `path_to_manifest_file`}}",
             "strip_path": true
         },
+        // detect if we need to de-register the image
         {
             "type": "shell-local",
             "script": "{{user `path_to_post_process_script`}}",
