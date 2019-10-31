@@ -37,25 +37,20 @@ path_remove_json_comment_script="${dir_project_root}/bin/rm_json_comment.py"
 
 python ${path_remove_json_comment_script} ${path_packer_json} ${path_final_packer_json} -o
 
-packer validate \
-    -var path_to_provisioner_setup_script="${dir_here}/01-provisioner-setup.sh" \
-    -var path_to_provisioner_test_script="${dir_here}/02-provisioner-test.sh" \
-    -var path_to_post_process_script="${dir_here}/03-packer-post-process.sh" \
-    ${path_final_packer_json}
-
-print_colored_line $color_green "INFO: Template validated successfully."
-
 # if in CodeBuild environment
-if [ -n "$CODEBUILD_BUILD_ID" ]; then
+if [ -n "$CODEBUILD_SOURCE_VERSION" ]; then
+    echo "detected code build runtime"
     branch_name="$(git branch -a --contains "${CODEBUILD_SOURCE_VERSION}" | sed -n 2p )"
     branch_name="$(python -c "print('$branch_name'.strip())")"
     var_file_arg=""
 # if in CircleCI environment
 elif [ -n "$CIRCLECI" ]; then
+    echo "detected circleci runtime"
     branch_name="$CIRCLE_BRANCH"
     var_file_arg=""
 # if in local laptop
 else
+    echo "detected local laptop runtime"
     branch_name="$(git branch | grep \* | cut -d ' ' -f2)"
     var_file_arg="-var-file ${dir_here}/packer-var-file.json"
 fi
@@ -70,6 +65,22 @@ else
     stage="temp"
 fi
 
+
+print_colored_line $color_green "INFO: Working on ---${branch_name}--- branch."
+print_colored_line $color_green "INFO: Working on ---${stage}--- stage."
+
+packer validate \
+    -var ami_name="${ami_name}" \
+    -var version="${version}" \
+    -var stage="${stage}" \
+    -var path_to_project_root="${dir_project_root}" \
+    -var path_to_provisioner_setup_script="${dir_here}/01-provisioner-setup.sh" \
+    -var path_to_provisioner_test_script="${dir_here}/02-provisioner-test.sh" \
+    -var path_to_manifest_file="${dir_here}/manifest.json" \
+    -var path_to_post_process_script="${dir_here}/03-packer-post-process.sh" \
+    ${path_final_packer_json}
+
+print_colored_line $color_green "INFO: Template validated successfully."
 
 packer build \
     -var ami_name="${ami_name}" \

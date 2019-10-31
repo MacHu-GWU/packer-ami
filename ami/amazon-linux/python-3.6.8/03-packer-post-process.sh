@@ -10,8 +10,9 @@ dir_project_root="$( dirname $( dirname  $( dirname ${dir_here} ) ) )"
 last_built_ami_id="$(python "${dir_project_root}/bin/get_ami_id.py" "${dir_here}/manifest.json")"
 
 # if in CodeBuild environment
-if [ -n "$CODEBUILD_BUILD_ID" ]; then
-    branch_name="$(git branch -a --contains $CODEBUILD_SOURCE_VERSION | sed -n 1p | awk '{ printf $2 }')"
+if [ -n "$CODEBUILD_SOURCE_VERSION" ]; then
+    branch_name="$(git branch -a --contains "${CODEBUILD_SOURCE_VERSION}" | sed -n 2p )"
+    branch_name="$(python -c "print('$branch_name'.strip())")"
 # if in CircleCI environment
 elif [ -n "CIRCLECI" ]; then
     branch_name="$CIRCLE_BRANCH"

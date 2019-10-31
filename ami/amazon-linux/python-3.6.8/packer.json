@@ -58,12 +58,12 @@
         },
         {
             "type": "file",
-            "source": "{{user `path_to_provisioner_setup_script`}}/bin",
+            "source": "{{user `path_to_project_root`}}/bin",
             "destination": "/tmp/repo"
         },
         {
             "type": "file",
-            "source": "{{user `path_to_provisioner_setup_script`}}/ami",
+            "source": "{{user `path_to_project_root`}}/ami",
             "destination": "/tmp/repo"
         },
         // setup software
@@ -94,6 +94,13 @@
                 "AWS_DEFAULT_REGION={{user `aws_region`}}"
             ],
             "execute_command": ["/bin/bash", "-c", "{{.Vars}} /bin/bash {{.Script}}"]
+        },
+        // clean up code from repo
+        {
+            "type": "shell-local",
+            "inline": [
+                "rm -r /tmp/repo"
+            ]
         }
     ],
     "sensitive-variables": [
