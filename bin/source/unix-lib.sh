@@ -31,18 +31,6 @@ display_command_install_status() {
 }
 
 
-try_install_this() {
-    if this_command_exists "$1"; then
-        print_colored_line $color_green "$1 is already installed."
-    else
-        print_colored_line $color_red "$1 is NOT installed!"
-        print_colored_line $color_cyan "start install $1 ..."
-        sudo yum install -y "$1"
-        display_command_install_status "$1"
-    fi
-}
-
-
 # if a file/dir exists, then remove it. do nothing if not exists.
 # usage:
 #
