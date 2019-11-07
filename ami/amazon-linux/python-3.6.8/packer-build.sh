@@ -29,6 +29,9 @@ dir_project_root="$( dirname $( dirname  $( dirname ${dir_here} ) ) )"
 source ${dir_project_root}/bin/source/lib.sh
 dir_here="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
+dir_project_root_on_ec2="/tmp/repo"
+dir_here_on_ec2="$(python -c "print('${dir_here}'.replace('${dir_project_root}', '${dir_project_root_on_ec2}', 1))")"
+echo $dir_here_on_ec2
 ami_name="$(cat "${dir_here}/ami-name")"
 version="$(cat "${dir_here}/version")"
 path_packer_json="${dir_here}/packer.json"
@@ -87,8 +90,8 @@ packer build \
     -var version="${version}" \
     -var stage="${stage}" \
     -var path_to_project_root="${dir_project_root}" \
-    -var path_to_provisioner_setup_script="${dir_here}/01-provisioner-setup.sh" \
-    -var path_to_provisioner_test_script="${dir_here}/02-provisioner-test.sh" \
+    -var path_to_provisioner_setup_script="${dir_here_on_ec2}/01-provisioner-setup.sh" \
+    -var path_to_provisioner_test_script="${dir_here_on_ec2}/02-provisioner-test.sh" \
     -var path_to_manifest_file="${dir_here}/manifest.json" \
     -var path_to_post_process_script="${dir_here}/03-packer-post-process.sh" \
     ${var_file_arg} \

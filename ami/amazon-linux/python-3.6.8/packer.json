@@ -50,6 +50,9 @@
                 "sleep 30"
             ]
         },
+        // copy files in this repo from packer runtime environment to remote server
+        // ``/tmp/repo`` on remote server represents the root dir of this repo
+        // in this example, it is ./packer-ami
         {
             "type": "shell",
             "inline": [
@@ -69,12 +72,16 @@
         // setup software
         {
             "type": "shell",
-            "script": "{{user `path_to_provisioner_setup_script`}}"
+            "inline": [
+                "bash {{user `path_to_provisioner_setup_script`}}"
+            ]
         },
         // validate image
         {
             "type": "shell",
-            "script": "{{user `path_to_provisioner_test_script`}}"
+            "inline": [
+                "bash {{user `path_to_provisioner_test_script`}}"
+            ]
         }
     ],
     "post-processors": [
@@ -94,13 +101,6 @@
                 "AWS_DEFAULT_REGION={{user `aws_region`}}"
             ],
             "execute_command": ["/bin/bash", "-c", "{{.Vars}} /bin/bash {{.Script}}"]
-        },
-        // clean up code from repo
-        {
-            "type": "shell-local",
-            "inline": [
-                "rm -r /tmp/repo"
-            ]
         }
     ],
     "sensitive-variables": [
