@@ -76,11 +76,12 @@ packer validate \
     -var ami_name="${ami_name}" \
     -var version="${version}" \
     -var stage="${stage}" \
-    -var path_to_project_root="${dir_project_root}" \
-    -var path_to_provisioner_setup_script="${dir_here}/01-provisioner-setup.sh" \
-    -var path_to_provisioner_test_script="${dir_here}/02-provisioner-test.sh" \
-    -var path_to_manifest_file="${dir_here}/manifest.json" \
-    -var path_to_post_process_script="${dir_here}/03-packer-post-process.sh" \
+    -var path_local_project_root="${dir_project_root}" \
+    -var path_remote_provisioner_setup_script="${dir_here}/remote1-provisioner-setup.sh" \
+    -var path_remote_provisioner_test_script="${dir_here}/remote2-provisioner-test.sh" \
+    -var path_remote_provisioner_clean_up_script="${dir_here}/remote3-provisioner-clean-up.sh" \
+    -var path_local_manifest_file="${dir_here}/manifest.json" \
+    -var path_local_post_process_script="${dir_here}/local1-packer-post-process.sh" \
     ${path_final_packer_json}
 
 print_colored_line $color_green "INFO: Template validated successfully."
@@ -89,10 +90,11 @@ packer build \
     -var ami_name="${ami_name}" \
     -var version="${version}" \
     -var stage="${stage}" \
-    -var path_to_project_root="${dir_project_root}" \
-    -var path_to_provisioner_setup_script="${dir_here_on_ec2}/01-provisioner-setup.sh" \
-    -var path_to_provisioner_test_script="${dir_here_on_ec2}/02-provisioner-test.sh" \
-    -var path_to_manifest_file="${dir_here}/manifest.json" \
-    -var path_to_post_process_script="${dir_here}/03-packer-post-process.sh" \
+    -var path_local_project_root="${dir_project_root}" \
+    -var path_remote_provisioner_setup_script="${dir_here_on_ec2}/remote1-provisioner-setup.sh" \
+    -var path_remote_provisioner_test_script="${dir_here_on_ec2}/remote2-provisioner-test.sh" \
+    -var path_remote_provisioner_clean_up_script="${dir_here_on_ec2}/remote3-provisioner-clean-up.sh" \
+    -var path_local_manifest_file="${dir_here}/manifest.json" \
+    -var path_local_post_process_script="${dir_here}/local1-packer-post-process.sh" \
     ${var_file_arg} \
     ${path_final_packer_json}
