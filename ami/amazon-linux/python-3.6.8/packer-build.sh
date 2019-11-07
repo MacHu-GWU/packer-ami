@@ -40,6 +40,8 @@ path_remove_json_comment_script="${dir_project_root}/bin/rm_json_comment.py"
 
 python ${path_remove_json_comment_script} ${path_packer_json} ${path_final_packer_json} -o
 
+echo "---$CODEBUILD_SOURCE_VERSION---"
+
 # if in CodeBuild environment
 if [ -n "$CODEBUILD_SOURCE_VERSION" ]; then
     echo "detected code build runtime"
