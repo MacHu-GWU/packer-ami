@@ -41,15 +41,15 @@ path_remove_json_comment_script="${dir_project_root}/bin/rm_json_comment.py"
 python ${path_remove_json_comment_script} ${path_packer_json} ${path_final_packer_json} -o
 
 # if in CodeBuild environment
-if [ -n "$CODEBUILD_SOURCE_VERSION" ]; then
+if [ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" ]; then
     echo "detected code build runtime"
-    branch_name="$(git branch -a --contains "${CODEBUILD_SOURCE_VERSION}" | sed -n 2p )"
+    branch_name="$(git branch -a --contains "${CODEBUILD_RESOLVED_SOURCE_VERSION}" | sed -n 2p )"
     branch_name="$(python -c "print('$branch_name'.strip())")"
     var_file_arg=""
 # if in CircleCI environment
-elif [ -n "$CIRCLECI" ]; then
+elif [ -n "${CIRCLECI}" ]; then
     echo "detected circleci runtime"
-    branch_name="$CIRCLE_BRANCH"
+    branch_name="${CIRCLE_BRANCH}"
     var_file_arg=""
 # if in local laptop
 else
@@ -58,12 +58,12 @@ else
     var_file_arg="-var-file ${dir_here}/packer-var-file.json"
 fi
 
-if [ "$branch_name" == "master" ]; then
+if [ "${branch_name}" == "master" ]; then
     stage="prod"
-elif [ "$branch_name" == "dev" ]; then
+elif [ "${branch_name}" == "dev" ]; then
     stage="$branch_name"
-elif [ "$branch_name" == "test" ]; then
-    stage="$branch_name"
+elif [ "${branch_name}" == "test" ]; then
+    stage="${branch_name}"
 else
     stage="temp"
 fi
