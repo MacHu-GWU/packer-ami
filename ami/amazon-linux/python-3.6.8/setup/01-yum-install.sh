@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This script has to be installed under root user
+
 dir_here="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 dir_project_root="$( dirname $( dirname $( dirname $( dirname $dir_here) ) ) )"
 
