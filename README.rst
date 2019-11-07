@@ -1,6 +1,12 @@
 Build Amazon Machine Image using Packer in AWS Code Build
 ==============================================================================
 
+TODO
+
+1. choose right base image
+2. security test
+    - CIS stig benchmark
+    - AWS Golden AMI security scan
 
 
 Basic Tutorial
