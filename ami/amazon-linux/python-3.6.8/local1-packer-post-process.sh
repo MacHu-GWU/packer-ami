@@ -14,7 +14,7 @@ if [ -n "$CODEBUILD_SOURCE_VERSION" ]; then
     branch_name="$(git branch -a --contains "${CODEBUILD_SOURCE_VERSION}" | sed -n 2p )"
     branch_name="$(python -c "print('$branch_name'.strip())")"
 # if in CircleCI environment
-elif [ -n "CIRCLECI" ]; then
+elif [ -n "$CIRCLECI" ]; then
     branch_name="$CIRCLE_BRANCH"
 # if in local laptop
 else

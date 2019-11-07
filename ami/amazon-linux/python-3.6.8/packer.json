@@ -11,16 +11,9 @@
         // stage of this image, prod / dev / test
         "stage": "",
         "path_local_project_root": "",
-        // the shell scripts that do the installation works
-        "path_remote_provisioner_setup_script": "",
-        // the shell scripts that test and validate the installtion works
-        "path_remote_provisioner_test_script": "",
-        // the shell scripts that clean up provisioner files on remote server
-        "path_remote_provisioner_clean_up_script": "",
-        // the output manifest file
-        "path_local_manifest_file": "",
-        // the shell script perform post process
-        "path_local_post_process_script": ""
+        "path_local_ami_dir": "",
+        "path_remote_project_root": "",
+        "path_remote_ami_dir": ""
     },
     "builders": [
         {
@@ -75,24 +68,33 @@
         {
             "type": "shell",
             "inline": [
-                "echo \"run bash {{user `path_remote_provisioner_setup_script`}}\"",
-                "bash {{user `path_remote_provisioner_setup_script`}}"
+                "sudo bash {{user `path_remote_ami_dir`}}/setup/01-yum-install.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "bash {{user `path_remote_ami_dir`}}/setup/02-pyenv.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "bash {{user `path_remote_ami_dir`}}/setup/03-python3.6.8.sh"
             ]
         },
         // validate image
         {
             "type": "shell",
             "inline": [
-                "echo \"run bash {{user `path_remote_provisioner_test_script`}}\"",
-                "bash {{user `path_remote_provisioner_test_script`}}"
+                "bash {{user `path_remote_ami_dir`}}/remote2-provisioner-test.sh"
             ]
         },
         // clean up artifacts
         {
             "type": "shell",
             "inline": [
-                "echo \"run bash {{user `path_remote_provisioner_clean_up_script`}}\"",
-                "bash {{user `path_remote_provisioner_clean_up_script`}}"
+                "bash {{user `path_remote_ami_dir`}}/remote3-provisioner-clean-up.sh"
             ]
         }
     ],
@@ -100,13 +102,13 @@
         // export artifacts infor to manifest file
         {
             "type": "manifest",
-            "output": "{{user `path_local_manifest_file`}}",
+            "output": "{{user `path_local_ami_dir`}}/manifest.json",
             "strip_path": true
         },
         // detect if we need to de-register the image
         {
             "type": "shell-local",
-            "script": "{{user `path_local_post_process_script`}}",
+            "script": "{{user `path_local_ami_dir`}}/local1-packer-post-process.sh",
             "environment_vars": [
                 "AWS_ACCESS_KEY_ID={{user `aws_access_key`}}",
                 "AWS_SECRET_ACCESS_KEY={{user `aws_secret_key`}}",
